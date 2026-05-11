@@ -128,7 +128,7 @@ var netConfig = require("NetConfig");
       nodemember1: cc.Node,
       //Esports
       lbJpbaucua: cc.Label,
-      lbJpxocdia: cc.Label,
+      lbJpxocdiaTL: cc.Label,
       //lbLoadingEsport: cc.Label,
       btnconfirmaccount: cc.Node,
       bundleControl: cc.BundleControl,
@@ -147,7 +147,7 @@ var netConfig = require("NetConfig");
         this.jackpot0 + Utils.randomRangeInt(2000 * scale, 400 * scale);
       this.jackpot1 = Utils.randomRangeInt(2000 * scale, 700 * scale);
       Tween.numberTo(this.lbJpbaucua, this.jackpot1, 1);
-      Tween.numberTo(this.lbJpxocdia, this.jackpot0, 1);
+      Tween.numberTo(this.lbJpxocdiaTL, this.jackpot0, 1);
       // this.updateNext0 = Utils.randomRangeInt(3, 5);
     },
 
