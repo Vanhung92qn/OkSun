@@ -152,11 +152,11 @@ var netConfig = require("NetConfig");
     _fetchJackpots: function () {
       var self = this;
       self._fetchJsonGet("https://xocdiatl.oksun.win/api/jackpot", function (data) {
-        if (!data || data.pool == null) return;
+        if (!data || typeof data.pool !== "number" || data.pool <= 0) return;
         if (self.lbJpxocdiaTL) Tween.numberTo(self.lbJpxocdiaTL, data.pool, 1);
       });
       self._fetchJsonGet("https://baucua.oksun.win/api/jackpot", function (data) {
-        if (!data || data.pool == null) return;
+        if (!data || typeof data.pool !== "number" || data.pool <= 0) return;
         if (self.lbJpbaucua) Tween.numberTo(self.lbJpbaucua, data.pool, 1);
       });
     },
@@ -169,11 +169,17 @@ var netConfig = require("NetConfig");
         xhr.onreadystatechange = function () {
           if (xhr.readyState !== 4) return;
           if (xhr.status >= 200 && xhr.status < 300) {
-            try { cb(JSON.parse(xhr.responseText)); } catch (e) { cb(null); }
-          } else { cb(null); }
+            try { cb(JSON.parse(xhr.responseText)); }
+            catch (e) { console.warn("[Jackpot] parse fail", url, xhr.responseText); cb(null); }
+          } else {
+            console.warn("[Jackpot] http fail", url, "status=" + xhr.status);
+            cb(null);
+          }
         };
+        xhr.onerror = function () { console.warn("[Jackpot] xhr error", url); cb(null); };
+        xhr.ontimeout = function () { console.warn("[Jackpot] timeout", url); cb(null); };
         xhr.send();
-      } catch (e) { cb(null); }
+      } catch (e) { console.warn("[Jackpot] throw", url, e); cb(null); }
     },
 
     // use this for initialization
