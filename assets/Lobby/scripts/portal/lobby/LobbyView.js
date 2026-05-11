@@ -1,7 +1,6 @@
 /**
  * Created by Nofear on 6/7/2017.
  */
-import Utils from "../../../scripts/shootFish/common/Utils";
 import Tween from "../../../scripts/shootFish/common/Tween";
 //import BundleControl from "../../../../Loading/script/loading/BundleControl";
 var BundleControl = require("BundleControl");
@@ -141,14 +140,40 @@ var netConfig = require("NetConfig");
 
     },
     start() {
-      let scale = 100000;
-      this.jackpot0 = Utils.randomRangeInt(2000 * scale, 700 * scale);
-      this.jackpotMax0 =
-        this.jackpot0 + Utils.randomRangeInt(2000 * scale, 400 * scale);
-      this.jackpot1 = Utils.randomRangeInt(2000 * scale, 700 * scale);
-      Tween.numberTo(this.lbJpbaucua, this.jackpot1, 1);
-      Tween.numberTo(this.lbJpxocdiaTL, this.jackpot0, 1);
-      // this.updateNext0 = Utils.randomRangeInt(3, 5);
+      var self = this;
+      self._fetchJackpots();
+      self._jpTimer = setInterval(function () { self._fetchJackpots(); }, 5000);
+    },
+
+    onDestroy() {
+      if (this._jpTimer) { clearInterval(this._jpTimer); this._jpTimer = null; }
+    },
+
+    _fetchJackpots: function () {
+      var self = this;
+      self._fetchJsonGet("https://xocdiatl.oksun.win/api/jackpot", function (data) {
+        if (!data || data.pool == null) return;
+        if (self.lbJpxocdiaTL) Tween.numberTo(self.lbJpxocdiaTL, data.pool, 1);
+      });
+      self._fetchJsonGet("https://baucua.oksun.win/api/jackpot", function (data) {
+        if (!data || data.pool == null) return;
+        if (self.lbJpbaucua) Tween.numberTo(self.lbJpbaucua, data.pool, 1);
+      });
+    },
+
+    _fetchJsonGet: function (url, cb) {
+      try {
+        var xhr = new XMLHttpRequest();
+        xhr.open("GET", url, true);
+        xhr.timeout = 8000;
+        xhr.onreadystatechange = function () {
+          if (xhr.readyState !== 4) return;
+          if (xhr.status >= 200 && xhr.status < 300) {
+            try { cb(JSON.parse(xhr.responseText)); } catch (e) { cb(null); }
+          } else { cb(null); }
+        };
+        xhr.send();
+      } catch (e) { cb(null); }
     },
 
     // use this for initialization
