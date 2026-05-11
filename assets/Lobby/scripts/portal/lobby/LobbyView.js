@@ -54,7 +54,7 @@ var netConfig = require("NetConfig");
       // progressCowboy: cc.ProgressBar,
       //    progressDragonTiger: cc.ProgressBar,
       progressXocXoc: cc.ProgressBar,
-      progressXocXocVip: cc.ProgressBar,
+      progressXocXocTL: cc.ProgressBar,
       progressXoDiaLivestream: cc.ProgressBar,
       progressTaiXiu: cc.ProgressBar,
       //   progressTaiXiuMd5: cc.ProgressBar,
@@ -83,7 +83,7 @@ var netConfig = require("NetConfig");
 
       //    lbLoadingDragonTiger: cc.Label,
       lbLoadingXocXoc: cc.Label,
-      lbLoadingXocXocVip: cc.Label,
+      lbLoadingXocXocTL: cc.Label,
       lbLoadingXocDiaLivestream: cc.Label,
       lbLoadingBauCua: cc.Label,
       lbLoadingLoDe: cc.Label,
@@ -925,7 +925,7 @@ var netConfig = require("NetConfig");
           this.isLoading = true;
           var self = this;
           //Bat loading
-          self.lbLoadingXocXocVip.node.parent.active = true;
+          self.lbLoadingXocXocTL.node.parent.active = true;
           var percent = 0;
 
 
@@ -934,12 +934,12 @@ var netConfig = require("NetConfig");
             if (tempPercent > percent) {
               percent = tempPercent;
             }
-            self.progressXocXocVip.progress = finish / total;
-            self.lbLoadingXocXocVip.string = `${parseInt((finish / total) * 100)}%`;
+            self.progressXocXocTL.progress = finish / total;
+            self.lbLoadingXocXocTL.string = `${parseInt((finish / total) * 100)}%`;
 
           }, prefab => {
             self.isLoading = false;
-            self.lbLoadingXocXocVip.node.parent.active = false;
+            self.lbLoadingXocXocTL.node.parent.active = false;
             self.nodeSlotsView = self.createView(prefab);
             self.activeNodeLobby(false);
           });
